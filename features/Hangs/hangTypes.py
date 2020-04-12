@@ -6,7 +6,7 @@ hangQueries = QueryType()
 hangMutations = MutationType()
 
 hangTypes = load_schema_from_path("./features/Hangs/hang.gql")
-hangObjectType = ObjectType('FBHang')
+hangObjectType = ObjectType('HTHang')
 hangQueries.set_field('getHang', resolve_hang)
 hangMutations.set_field('createHang', create_hang)
 hangMutations.set_field('updateHang', update_hang)
