@@ -1,0 +1,31 @@
+type HTHang {
+  id: String!
+  title: String
+  name: String
+}
+
+input HTHangCreateInput {
+  name: String
+}
+
+input HTHangUpdateInput {
+  id: String!
+  name: String
+}
+
+type HangTimeHangResponse implements HangTimeResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  hang: HTHang
+}
+
+extend type Query {
+  getHang(id: String!): HTHang
+  getHangs(lastEvaluatedKey: String): [HTHang]
+}
+
+extend type Mutation {
+  createHang(Hang: HTHangCreateInput): HangTimeHangResponse
+  updateHang(Hang: HTHangUpdateInput): HangTimeHangResponse
+}

@@ -1,0 +1,9 @@
+interface HangTimeResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+}
+
+type Mutation {
+  hello: HangTimeResponse
+}

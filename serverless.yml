@@ -1,0 +1,59 @@
+service: hangtime-api
+
+plugins:
+  - serverless-offline
+  - serverless-wsgi
+  - serverless-dotenv-plugin
+  - serverless-python-requirements
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: ${opt:stage, 'dev'}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["hangtimetable", "Arn"] }
+  environment:
+    STAGE: ${self:provider.stage}
+    TABLE_NAME: ${env:TABLE_NAME}
+
+custom:
+  wsgi:
+    app: app.app
+    packRequirements: false
+  dotenv:
+    path: ./.env
+    basePath: ./
+    include:
+      - TABLE_NAME
+
+functions:
+  api:
+    handler: wsgi_handler.handler
+    events:
+      - http: ANY /
+      - http: ANY {proxy+}
+
+resources:
+  Resources:
+    hangtimetable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: hang-time-${self:provider.stage}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
