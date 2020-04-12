@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "sls wsgi serve -p 8000",
     "test": "TABLE_NAME=hangtime-test python -m pytest"
   },
   "repository": {
